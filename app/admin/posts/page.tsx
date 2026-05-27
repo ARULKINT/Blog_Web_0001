@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { connectDB, isDBConfigured } from "@/lib/db";
 import { Post } from "@/lib/models/Post";
-import { Plus, Pencil, Eye, Trash2 } from "lucide-react";
+import { Plus, Pencil, Eye } from "lucide-react";
 import { formatDate } from "@/lib/utils";
+import { DeletePostButton } from "./DeletePostButton";
 
 async function getPosts() {
   if (!isDBConfigured()) return [];
@@ -118,33 +119,5 @@ export default async function AdminPostsPage() {
         </table>
       </div>
     </div>
-  );
-}
-
-function DeletePostButton({ id }: { id: string }) {
-  return (
-    <form
-      action={async () => {
-        "use server";
-        const { connectDB } = await import("@/lib/db");
-        const { Post } = await import("@/lib/models/Post");
-        await connectDB();
-        await Post.findByIdAndDelete(id);
-        const { revalidatePath } = await import("next/cache");
-        revalidatePath("/admin/posts");
-        revalidatePath("/blog");
-      }}
-    >
-      <button
-        type="submit"
-        className="text-muted hover:text-red-500 transition-colors"
-        title="Delete"
-        onClick={(e) => {
-          if (!confirm("Delete this post? This cannot be undone.")) e.preventDefault();
-        }}
-      >
-        <Trash2 className="h-4 w-4" />
-      </button>
-    </form>
   );
 }
