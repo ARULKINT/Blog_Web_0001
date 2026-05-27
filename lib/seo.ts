@@ -70,8 +70,8 @@ export function blogPostingJsonLd(post: Post) {
     dateModified: post.updatedAt,
     author: {
       "@type": "Person",
-      name: post.author.name,
-      url: post.author.social?.website || SITE_URL,
+      name: post.author?.name ?? SITE_NAME,
+      url: post.author?.social?.website || SITE_URL,
     },
     publisher: {
       "@type": "Organization",

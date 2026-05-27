@@ -44,23 +44,29 @@ export function HeroFeatured({ post }: { post: Post }) {
 
         <div className="flex items-center justify-between gap-4 flex-wrap">
           <div className="flex items-center gap-2">
-            {post.author.avatar ? (
-              <Image
-                src={post.author.avatar}
-                alt={post.author.name}
-                width={36}
-                height={36}
-                className="rounded-full object-cover border-2 border-white/30"
-              />
+            {post.author ? (
+              <>
+                {post.author.avatar ? (
+                  <Image
+                    src={post.author.avatar}
+                    alt={post.author.name}
+                    width={36}
+                    height={36}
+                    className="rounded-full object-cover border-2 border-white/30"
+                  />
+                ) : (
+                  <div className="h-9 w-9 rounded-full bg-white/20 flex items-center justify-center text-sm font-bold text-white">
+                    {post.author.name[0]}
+                  </div>
+                )}
+                <div>
+                  <p className="text-white text-sm font-medium">{post.author.name}</p>
+                  <p className="text-white/60 text-xs">{formatDate(post.publishedAt)}</p>
+                </div>
+              </>
             ) : (
-              <div className="h-9 w-9 rounded-full bg-white/20 flex items-center justify-center text-sm font-bold text-white">
-                {post.author.name[0]}
-              </div>
-            )}
-            <div>
-              <p className="text-white text-sm font-medium">{post.author.name}</p>
               <p className="text-white/60 text-xs">{formatDate(post.publishedAt)}</p>
-            </div>
+            )}
           </div>
 
           <Link

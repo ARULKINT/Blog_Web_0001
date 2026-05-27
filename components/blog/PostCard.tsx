@@ -91,20 +91,24 @@ export function PostCard({ post, variant = "default", className }: PostCardProps
           {/* Meta row */}
           <div className="flex items-center justify-between pt-2 mt-auto">
             <div className="flex items-center gap-2">
-              {post.author.avatar ? (
-                <Image
-                  src={post.author.avatar}
-                  alt={post.author.name}
-                  width={28}
-                  height={28}
-                  className="rounded-full object-cover"
-                />
-              ) : (
-                <div className="h-7 w-7 rounded-full bg-accent/20 flex items-center justify-center text-xs font-bold text-accent">
-                  {post.author.name[0]}
-                </div>
+              {post.author && (
+                <>
+                  {post.author.avatar ? (
+                    <Image
+                      src={post.author.avatar}
+                      alt={post.author.name}
+                      width={28}
+                      height={28}
+                      className="rounded-full object-cover"
+                    />
+                  ) : (
+                    <div className="h-7 w-7 rounded-full bg-accent/20 flex items-center justify-center text-xs font-bold text-accent">
+                      {post.author.name[0]}
+                    </div>
+                  )}
+                  <span className="text-xs text-muted">{post.author.name}</span>
+                </>
               )}
-              <span className="text-xs text-muted">{post.author.name}</span>
             </div>
             <div className="flex items-center gap-3 text-xs text-muted">
               <span className="flex items-center gap-1">

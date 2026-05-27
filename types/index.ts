@@ -36,7 +36,7 @@ export interface Post {
   coverImage: string;
   category: Category;
   tags: Tag[];
-  author: Author;
+  author: Author | null;
   status: "draft" | "published";
   publishedAt: string;
   readingTime: number;
