@@ -88,7 +88,7 @@ export default async function AdminPostsPage() {
                       {post.status}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-muted">{post.views.toLocaleString()}</td>
+                  <td className="px-6 py-4 text-muted">{(post.views ?? 0).toLocaleString()}</td>
                   <td className="px-6 py-4 text-muted text-xs">
                     {post.publishedAt ? formatDate(post.publishedAt) : formatDate(post.createdAt)}
                   </td>
