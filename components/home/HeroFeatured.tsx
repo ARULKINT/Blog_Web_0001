@@ -1,22 +1,30 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+import { useState } from "react";
 import { Clock, ArrowRight } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 import { Badge } from "@/components/ui/Badge";
 import type { Post } from "@/types";
 
+const FALLBACK = "https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=1600";
+
 export function HeroFeatured({ post }: { post: Post }) {
+  const [imgSrc, setImgSrc] = useState(post.coverImage || FALLBACK);
+
   return (
     <section className="relative min-h-[75vh] flex items-end overflow-hidden rounded-3xl">
       {/* Background image */}
       <div className="absolute inset-0">
         <Image
-          src={post.coverImage || "https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=1600"}
+          src={imgSrc}
           alt={post.title}
           fill
           priority
           className="object-cover"
           sizes="100vw"
+          onError={() => setImgSrc(FALLBACK)}
         />
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
