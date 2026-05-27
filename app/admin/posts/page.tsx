@@ -27,7 +27,12 @@ async function getPosts() {
 }
 
 export default async function AdminPostsPage() {
-  const posts = await getPosts();
+  let posts: Awaited<ReturnType<typeof getPosts>> = [];
+  try {
+    posts = await getPosts();
+  } catch (err) {
+    console.error("[admin/posts] getPosts failed:", err);
+  }
 
   return (
     <div className="p-8 max-w-6xl">
