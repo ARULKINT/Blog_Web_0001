@@ -1,0 +1,189 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Color tokens ─────────────────────────────────────────── */
+:root {
+  --bg: 250 250 247;
+  --surface: 255 255 255;
+  --surface-2: 244 244 241;
+  --border: 229 229 225;
+  --text: 10 10 10;
+  --muted: 107 114 128;
+  --accent: 99 102 241;
+  --accent-foreground: 255 255 255;
+  --highlight: 245 158 11;
+}
+
+.dark {
+  --bg: 10 10 11;
+  --surface: 17 17 20;
+  --surface-2: 24 24 28;
+  --border: 39 39 42;
+  --text: 250 250 250;
+  --muted: 156 163 175;
+  --accent: 99 102 241;
+  --accent-foreground: 255 255 255;
+  --highlight: 245 158 11;
+}
+
+/* ─── Base ──────────────────────────────────────────────────── */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-bg text-text font-sans transition-colors duration-300;
+    min-height: 100dvh;
+  }
+
+  ::selection {
+    background-color: rgb(var(--accent) / 0.2);
+    color: rgb(var(--text));
+  }
+
+  :focus-visible {
+    outline: 2px solid rgb(var(--accent));
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: rgb(var(--border));
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgb(var(--muted));
+  }
+}
+
+/* ─── Typography ────────────────────────────────────────────── */
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif tracking-tight text-text;
+    text-wrap: balance;
+  }
+
+  p { text-wrap: pretty; }
+
+  a { @apply transition-colors duration-150; }
+
+  img, video { @apply max-w-full; }
+
+  code:not(pre code) {
+    @apply bg-surface-2 text-accent rounded px-1.5 py-0.5 text-[0.875em] font-mono;
+  }
+}
+
+/* ─── Prose overrides ───────────────────────────────────────── */
+.prose {
+  --tw-prose-headings: rgb(var(--text));
+  --tw-prose-body: rgb(var(--text));
+  --tw-prose-links: rgb(var(--accent));
+  --tw-prose-code: rgb(var(--text));
+  --tw-prose-pre-bg: rgb(var(--surface-2));
+  --tw-prose-quotes: rgb(var(--muted));
+  --tw-prose-quote-borders: rgb(var(--accent));
+}
+
+.prose pre {
+  @apply rounded-2xl border border-border text-sm overflow-x-auto;
+}
+
+.prose blockquote {
+  @apply rounded-r-xl border-l-4 not-italic;
+  border-color: rgb(var(--accent));
+}
+
+.prose h2, .prose h3 { @apply scroll-mt-24; }
+
+/* ─── Utilities ─────────────────────────────────────────────── */
+@layer utilities {
+  .glass {
+    @apply backdrop-blur-xl bg-white/70 dark:bg-black/40 border border-white/10 dark:border-white/5;
+  }
+
+  .glass-card {
+    @apply bg-surface/80 backdrop-blur-sm border border-border rounded-2xl;
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-accent to-highlight bg-clip-text text-transparent;
+  }
+
+  .gradient-hero {
+    background: linear-gradient(
+      135deg,
+      rgb(var(--accent) / 0.15) 0%,
+      rgb(var(--highlight) / 0.08) 50%,
+      transparent 100%
+    );
+  }
+
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      rgb(var(--surface-2)) 0%,
+      rgb(var(--border)) 50%,
+      rgb(var(--surface-2)) 100%
+    );
+    background-size: 200% 100%;
+    @apply animate-shimmer rounded-lg;
+  }
+
+  /* Fluid type helpers */
+  .text-display {
+    font-size: clamp(2rem, 5vw, 4rem);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+
+  .text-hero {
+    font-size: clamp(1.5rem, 3.5vw, 2.75rem);
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+  }
+
+  .section-title {
+    font-size: clamp(1.25rem, 2.5vw, 1.875rem);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+}
+
+/* ─── Animations ─────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Scroll progress bar */
+#scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    rgb(var(--accent)),
+    rgb(var(--highlight))
+  );
+  z-index: 9999;
+  transform-origin: left;
+  will-change: transform;
+}

@@ -1,0 +1,47 @@
+import { NextResponse } from "next/server";
+import { z } from "zod";
+import { auth } from "@/auth";
+import { connectDB } from "@/lib/db";
+import { Tag } from "@/lib/models/Tag";
+import { slugify } from "@/lib/utils";
+
+const schema = z.object({
+  name: z.string().min(1).max(60),
+  slug: z.string().min(1).max(80).optional(),
+});
+
+async function requireAdmin() {
+  const session = await auth();
+  return session?.user?.role === "admin" ? session : null;
+}
+
+export async function GET() {
+  const session = await requireAdmin();
+  if (!session) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
+  await connectDB();
+  const tags = await Tag.find().sort({ name: 1 }).lean();
+  return NextResponse.json(tags);
+}
+
+export async function POST(req: Request) {
+  const session = await requireAdmin();
+  if (!session) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
+  let body: unknown;
+  try { body = await req.json(); } catch { return NextResponse.json({ error: "Invalid JSON" }, { status: 400 }); }
+
+  const parsed = schema.safeParse(body);
+  if (!parsed.success) return NextResponse.json({ error: parsed.error.flatten() }, { status: 422 });
+
+  const { name } = parsed.data;
+  const slug = parsed.data.slug ?? slugify(name);
+
+  await connectDB();
+
+  const existing = await Tag.findOne({ slug });
+  if (existing) return NextResponse.json({ error: "Slug already taken" }, { status: 409 });
+
+  const tag = await Tag.create({ name, slug });
+  return NextResponse.json(tag, { status: 201 });
+}
