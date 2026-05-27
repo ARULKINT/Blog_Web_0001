@@ -25,9 +25,15 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
 
 export async function generateStaticParams() {
   if (!isDBConfigured()) return [];
-  const slugs = await getAllCategorySlugs();
-  return slugs.map((slug) => ({ slug }));
+  try {
+    const slugs = await getAllCategorySlugs();
+    return slugs.map((slug) => ({ slug }));
+  } catch {
+    return [];
+  }
 }
+
+export const dynamicParams = true;
 
 export const revalidate = 3600;
 

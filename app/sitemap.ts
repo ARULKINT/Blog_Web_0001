@@ -18,10 +18,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   if (!isDBConfigured()) return staticRoutes;
 
-  const [postSlugs, categorySlugs] = await Promise.all([
-    getAllPostSlugs(),
-    getAllCategorySlugs(),
-  ]);
+  let postSlugs: string[] = [];
+  let categorySlugs: string[] = [];
+  try {
+    [postSlugs, categorySlugs] = await Promise.all([
+      getAllPostSlugs(),
+      getAllCategorySlugs(),
+    ]);
+  } catch {
+    return staticRoutes;
+  }
 
   const postRoutes: MetadataRoute.Sitemap = postSlugs.map((slug) => ({
     url: `${SITE_URL}/blog/${slug}`,

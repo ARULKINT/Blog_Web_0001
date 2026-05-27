@@ -28,16 +28,26 @@ interface PostPageProps {
 export async function generateMetadata({ params }: PostPageProps): Promise<Metadata> {
   const { slug } = await params;
   if (!isDBConfigured()) return {};
-  const post = await getPostBySlug(slug);
-  if (!post) return {};
-  return buildPostMetadata(post);
+  try {
+    const post = await getPostBySlug(slug);
+    if (!post) return {};
+    return buildPostMetadata(post);
+  } catch {
+    return {};
+  }
 }
 
 export async function generateStaticParams() {
   if (!isDBConfigured()) return [];
-  const slugs = await getAllPostSlugs();
-  return slugs.map((slug) => ({ slug }));
+  try {
+    const slugs = await getAllPostSlugs();
+    return slugs.map((slug) => ({ slug }));
+  } catch {
+    return [];
+  }
 }
+
+export const dynamicParams = true;
 
 export const revalidate = 3600;
 
