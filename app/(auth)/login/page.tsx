@@ -10,6 +10,7 @@ import Link from "next/link";
 import { Loader2, LogIn } from "lucide-react";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
+import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
 
 const schema = z.object({
   email: z.string().email("Enter a valid email"),
@@ -80,6 +81,14 @@ export default function LoginPage() {
         <Button type="submit" variant="primary" size="lg" className="w-full" disabled={loading}>
           {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <><LogIn className="h-4 w-4" /> Sign in</>}
         </Button>
+
+        <div className="relative flex items-center gap-3">
+          <div className="flex-1 h-px bg-border" />
+          <span className="text-xs uppercase tracking-wider text-muted">or</span>
+          <div className="flex-1 h-px bg-border" />
+        </div>
+
+        <GoogleSignInButton callbackUrl={callbackUrl} />
 
         <p className="text-center text-sm text-muted">
           Don&apos;t have an account?{" "}

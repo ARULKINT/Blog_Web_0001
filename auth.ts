@@ -9,6 +9,27 @@ import { authConfig } from "./auth.config";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
+  callbacks: {
+    ...authConfig.callbacks,
+    async signIn({ user, account }) {
+      if (account?.provider === "google" && user.email) {
+        await connectDB();
+        const email = user.email.toLowerCase();
+        let dbUser = await User.findOne({ email });
+        if (!dbUser) {
+          dbUser = await User.create({
+            name: user.name ?? email.split("@")[0],
+            email,
+            avatar: user.image ?? "",
+            role: "reader",
+          });
+        }
+        user.id = String(dbUser._id);
+        (user as { role?: string }).role = dbUser.role;
+      }
+      return true;
+    },
+  },
   providers: [
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID!,

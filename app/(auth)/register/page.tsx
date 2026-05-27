@@ -10,6 +10,7 @@ import Link from "next/link";
 import { Loader2, UserPlus } from "lucide-react";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
+import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
 
 const schema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -81,6 +82,14 @@ export default function RegisterPage() {
         <Button type="submit" variant="primary" size="lg" className="w-full" disabled={loading}>
           {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <><UserPlus className="h-4 w-4" /> Create account</>}
         </Button>
+
+        <div className="relative flex items-center gap-3">
+          <div className="flex-1 h-px bg-border" />
+          <span className="text-xs uppercase tracking-wider text-muted">or</span>
+          <div className="flex-1 h-px bg-border" />
+        </div>
+
+        <GoogleSignInButton callbackUrl="/" />
 
         <p className="text-center text-sm text-muted">
           Already have an account?{" "}
