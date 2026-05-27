@@ -5,10 +5,10 @@ import { z } from "zod";
 import bcrypt from "bcryptjs";
 import { connectDB } from "@/lib/db";
 import { User } from "@/lib/models/User";
+import { authConfig } from "./auth.config";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  secret: process.env.NEXTAUTH_SECRET ?? process.env.AUTH_SECRET,
-  trustHost: true,
+  ...authConfig,
   providers: [
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -46,25 +46,4 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       },
     }),
   ],
-  callbacks: {
-    jwt({ token, user }) {
-      if (user) {
-        token.id = user.id;
-        token.role = (user as { role?: string }).role ?? "reader";
-      }
-      return token;
-    },
-    session({ session, token }) {
-      if (token && session.user) {
-        session.user.id = token.id as string;
-        session.user.role = token.role as string;
-      }
-      return session;
-    },
-  },
-  pages: {
-    signIn: "/login",
-    error: "/login",
-  },
-  session: { strategy: "jwt" },
 });
